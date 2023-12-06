@@ -1,0 +1,55 @@
+<launch>
+    <!-- Map server -->
+    <arg name="map_file" default="$(find planner_benchmark)/maps/hospital_world.yaml"/>
+    <node name="map_server" pkg="map_server" type="map_server" args="$(arg map_file)" />
+
+    <!-- global planner -->
+    <node pkg="planner_benchmark" type="planner_benchmark" name="planner_global" output="screen">
+        <param name="base_global_planner" value="global_planner/GlobalPlanner"/>
+        <rosparam file="$(find planner_benchmark)/param/cosmap_global.yaml" command="load" />
+        <rosparam file="$(find planner_benchmark)/param/planner_global.yaml" command="load" />
+    </node>
+
+    <!-- global planner MyGlobal -->
+    <node pkg="planner_benchmark" type="planner_benchmark" name="planner_global_my" output="screen">
+        <param name="base_global_planner" value="my_global_planner/MyGlobalPlanner"/>
+        <rosparam file="$(find planner_benchmark)/param/my_cosmap_global.yaml" command="load" />
+        <rosparam file="$(find planner_benchmark)/param/my_planner_global.yaml" command="load" />
+    </node>
+
+
+    <!-- global planner Global -->
+    <node pkg="planner_benchmark" type="planner_benchmark" name="a_better_star" output="screen">
+        <param name="base_global_planner" value="a_better_star/GlobalPlanner"/>
+        <rosparam file="$(find planner_benchmark)/param/cosmap_global.yaml" command="load" />
+        <rosparam file="$(find planner_benchmark)/param/a_better_star_params.yaml" command="load" />
+    </node>
+
+    <node pkg="planner_benchmark" type="planner_benchmark" name="graph_planner_dijkstra" output="screen">
+        <param name="base_global_planner" value="graph_planner/GraphPlanner"/>
+        <param name="GraphPlanner/planner_name" value="dijkstra"/>
+        <rosparam file="$(find planner_benchmark)/param/global_costmap_params.yaml" command="load" />
+        <rosparam file="$(find planner_benchmark)/param/graph_planner_params.yaml" command="load" />
+    </node>
+
+    <!-- graph_planner_d_star -->
+    <node pkg="planner_benchmark" type="planner_benchmark" name="graph_planner_d_star" output="screen">
+        <param name="base_global_planner" value="graph_planner/GraphPlanner"/>
+        <param name="GraphPlanner/planner_name" value="d_star"/>
+        <rosparam file="$(find planner_benchmark)/param/global_costmap_params.yaml" command="load" />
+        <rosparam file="$(find planner_benchmark)/param/graph_planner_params.yaml" command="load" />
+    </node>
+    
+    <!-- graph_planner_d_star_lite -->
+    <node pkg="planner_benchmark" type="planner_benchmark" name="graph_planner_d_star_lite" output="screen">
+        <param name="base_global_planner" value="graph_planner/GraphPlanner"/>
+        <param name="GraphPlanner/planner_name" value="d_star_lite"/>
+        <rosparam file="$(find planner_benchmark)/param/global_costmap_params.yaml" command="load" />
+        <rosparam file="$(find planner_benchmark)/param/graph_planner_params.yaml" command="load" />
+    </node>    
+
+    <node name="rviz" pkg="rviz" type="rviz" args="-d $(find planner_benchmark)/param/show2.rviz"/> 
+
+    <node pkg="planner_benchmark" type="fake_state" name="fake_state_node" output="screen" />
+    <node pkg="tf" type="static_transform_publisher" name="map_odom_broadcaster" args="0 0 0 0 0 0 /map /odom 100" />
+</launch>

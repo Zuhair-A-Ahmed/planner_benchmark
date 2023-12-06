@@ -1,0 +1,25 @@
+global_costmap:
+  global_frame: map
+  robot_base_frame: base_footprint
+
+  update_frequency: 0.1 #1.0 #TB3B
+  publish_frequency: 0.1 #1.0 #TB3B
+  transform_tolerance: 0.5 #TB3B
+  resolution: 0.025
+ 
+  #static_map: true #TB3B
+  #map_type: costmap #TB3B
+  scan: {sensor_frame: base_scan, data_type: LaserScan, topic: scan, marking: true, clearing: true} #TB3B
+  
+  #footprint: [[-0.105, -0.105], [-0.105, 0.105], [0.041, 0.105], [0.041, -0.105]] #TB3B
+  #robot_radius: 0.25
+  robot_radius: 0.105 #TB3B
+  
+  inflation_layer:
+    inflation_radius: 1.62 #3.0 #TB3B
+    cost_scaling_factor: 2.58 #3.0 #TB3B
+
+  plugins:
+    - {name: static_layer,    type: "costmap_2d::StaticLayer"}
+    - {name: inflation_layer, type: "costmap_2d::InflationLayer"}
+    

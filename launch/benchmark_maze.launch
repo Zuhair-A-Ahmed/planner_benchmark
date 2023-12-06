@@ -1,0 +1,63 @@
+<launch>
+    <!-- Map server -->
+    <arg name="map_file" default="$(find planner_benchmark)/maps/world4.yaml"/>
+    <node name="map_server" pkg="map_server" type="map_server" args="$(arg map_file)" />
+
+
+    <node pkg="planner_benchmark" type="planner_benchmark" name="astar_planner_ros_name" output="screen">
+        <param name="base_global_planner" value="astar_planner_ros/AStarPlannerROS"/>
+        <rosparam file="$(find planner_benchmark)/param/cosmap_global.yaml" command="load" />
+    </node>
+    
+    <node pkg="planner_benchmark" type="planner_benchmark" name="a_star_global_planner_name" output="screen">
+        <param name="base_global_planner" value="a_star_global_planner/AstarGlobalPlannerRos"/>
+        <rosparam file="$(find planner_benchmark)/param/cosmap_global.yaml" command="load" />
+    </node>
+    
+    <node pkg="planner_benchmark" type="planner_benchmark" name="a_better_star_name" output="screen">
+        <param name="base_global_planner" value="a_better_star/GlobalPlanner"/>
+
+        <rosparam file="$(find planner_benchmark)/param/cosmap_global.yaml" command="load" />
+        <rosparam file="$(find planner_benchmark)/param/global_planner_params.yaml" command="load" />
+    </node>
+
+
+    <!-- global planner -->
+    <node pkg="planner_benchmark" type="planner_benchmark" name="planner_global" output="screen">
+        <param name="base_global_planner" value="global_planner/GlobalPlanner"/>
+
+        <rosparam file="$(find planner_benchmark)/param/cosmap_global.yaml" command="load" />
+        <rosparam file="$(find planner_benchmark)/param/planner_global.yaml" command="load" />
+    </node>
+
+    <!-- navfn planner -->
+    <node pkg="planner_benchmark" type="planner_benchmark" name="planner_navfn" output="screen">
+        <param name="base_global_planner" value="navfn/NavfnROS"/>
+
+        <rosparam file="$(find planner_benchmark)/param/cosmap_global.yaml" command="load" />
+        <rosparam file="$(find planner_benchmark)/param/planner_navfn.yaml" command="load" />
+    </node>
+
+    <!-- sbpl planner -->
+    <node pkg="planner_benchmark" type="planner_benchmark" name="planner_sbpl" output="screen">
+        <param name="base_global_planner" value="SBPLLatticePlanner"/>
+
+        <rosparam file="$(find planner_benchmark)/param/cosmap_global.yaml" command="load" />
+        <rosparam file="$(find planner_benchmark)/param/planner_sbpl.yaml" command="load" />
+        <param name="SBPLLatticePlanner/primitive_filename" value="$(find planner_benchmark)/param/mprim/non_uniform_res005_rad1_err005.mprim" />
+    </node>
+
+    <!-- dlux planner -->
+    <node pkg="planner_benchmark" type="planner_benchmark" name="planner_dlux" output="screen">
+        <param name="base_global_planner" value="nav_core_adapter::GlobalPlannerAdapter"/>
+
+        <rosparam file="$(find planner_benchmark)/param/cosmap_global.yaml" command="load" />
+        <rosparam file="$(find planner_benchmark)/param/planner_dlux_global.yaml" command="load" />
+    </node>
+
+    <!-- Show in Rviz   -->
+    <node name="rviz" pkg="rviz" type="rviz" args="-d $(find planner_benchmark)/param/show.rviz"/> <!--1-->
+
+    <node pkg="planner_benchmark" type="fake_state" name="fake_state_node" output="screen" />
+    <node pkg="tf" type="static_transform_publisher" name="map_odom_broadcaster" args="0 0 0 0 0 0 /map /odom 100" />
+</launch>

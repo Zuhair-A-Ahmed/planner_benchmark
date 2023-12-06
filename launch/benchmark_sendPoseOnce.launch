@@ -1,0 +1,4 @@
+<launch>
+  <node name="pose_publisher" pkg="rostopic" type="rostopic" args="pub --once /move_base_simple/goal geometry_msgs/PoseStamped '{header: {frame_id: &quot;map&quot;}, pose: {position: {x: 4, y: 16}, orientation: {z: 0.0, w: 1.0}}}' " />
+</launch>
+

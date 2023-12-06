@@ -1,0 +1,30 @@
+<launch>
+    <!-- Map server -->
+    <arg name="map_file" default="$(find planner_benchmark)/maps/hospital_world.yaml"/>
+    <node name="map_server" pkg="map_server" type="map_server" args="$(arg map_file)" />
+
+    <!-- global_planner -->
+    <node pkg="planner_benchmark" type="planner_benchmark" name="global_planner" output="screen">
+        <param name="base_global_planner" value="global_planner/GlobalPlanner"/>
+        <rosparam file="$(find planner_benchmark)/param/global_planner/global_planner_cost_map.yaml" command="load" />
+        <rosparam file="$(find planner_benchmark)/param/global_planner/global_planner.yaml" command="load" />
+    </node>
+
+    <!-- a_better_star -->
+    <node pkg="planner_benchmark" type="planner_benchmark" name="a_better_star" output="screen">
+        <param name="base_global_planner" value="a_better_star/GlobalPlanner"/>
+        <rosparam file="$(find planner_benchmark)/param/global_planner/global_planner_cost_map.yaml" command="load" />
+        <rosparam file="$(find planner_benchmark)/param/a_better_star/a_better_star.yaml" command="load" />
+    </node>
+
+    <!-- astar_planner_ros -->
+    <node pkg="planner_benchmark" type="planner_benchmark" name="astar_planner_ros" output="screen">
+        <param name="base_global_planner" value="astar_planner_ros/AStarPlannerROS"/>
+        <rosparam file="$(find planner_benchmark)/param/global_planner/global_planner_cost_map.yaml" command="load" />
+        <rosparam file="$(find planner_benchmark)/param/global_planner/global_planner.yaml" command="load" />
+    </node>
+
+    <node name="rviz" pkg="rviz" type="rviz" args="-d $(find planner_benchmark)/param/rviz/hospital_not_smoothed_Astar.rviz"/> 
+    <node pkg="planner_benchmark" type="fake_state" name="fake_state_node" output="screen" />
+    <node pkg="tf" type="static_transform_publisher" name="map_odom_broadcaster" args="0 0 0 0 0 0 /map /odom 100" />
+</launch>

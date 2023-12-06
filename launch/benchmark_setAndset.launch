@@ -1,0 +1,28 @@
+<launch>
+
+  <!-- Send specific goal point -->
+  <node name="pose_publisher1" pkg="rostopic" type="rostopic" args="pub --once /move_base_simple/goal geometry_msgs/PoseStamped '{header: {frame_id: &quot;map&quot;}, pose: {position: {x: 18, y: 10}, orientation: {z: 0.0, w: 1.0}}}' " />
+
+<arg name="node_start_delay" default="20.0" />  
+<node name="delay1" pkg="roscpp_tutorials" type="listener" launch-prefix="bash -c 'sleep $(arg node_start_delay); $0 $@' "/>
+
+  <!-- Set initial pose to zero coordinates -->
+  <node name="set_initialpose1" pkg="rostopic" type="rostopic" args="pub --once /initialpose geometry_msgs/PoseWithCovarianceStamped '{header: {frame_id: &quot;map&quot;}, pose: {pose: {position: {x: 18, y: 10, z: 0.0}, orientation: {x: 0.0, y: 0.0, z: 0.0, w: 1.0}}}}'"/>
+  
+<node name="delay2" pkg="roscpp_tutorials" type="listener" launch-prefix="bash -c 'sleep $(arg node_start_delay); $0 $@' "/>
+
+  <!-- Send specific goal point -->
+  <node name="pose_publisher2" pkg="rostopic" type="rostopic" args="pub --once /move_base_simple/goal geometry_msgs/PoseStamped '{header: {frame_id: &quot;map&quot;}, pose: {position: {x: -25, y: 0}, orientation: {z: 0.0, w: 1.0}}}' " />
+
+<node name="delay3" pkg="roscpp_tutorials" type="listener" launch-prefix="bash -c 'sleep $(arg node_start_delay); $0 $@' "/>
+
+  <!-- Set the goal point as the new initial position -->
+  <node name="set_initialpose2" pkg="rostopic" type="rostopic" args="pub --once /initialpose geometry_msgs/PoseWithCovarianceStamped '{header: {frame_id: &quot;map&quot;}, pose: {pose: {position: {x: -25, y: 0, z: 0.0}, orientation: {x: 0.0, y: 0.0, z: 0.0, w: 1.0}}}}'"/>
+  
+  <node name="delay4" pkg="roscpp_tutorials" type="listener" launch-prefix="bash -c 'sleep $(arg node_start_delay); $0 $@' "/>
+  
+    <!-- Send specific goal point -->
+  <node name="pose_publisher3" pkg="rostopic" type="rostopic" args="pub --once /move_base_simple/goal geometry_msgs/PoseStamped '{header: {frame_id: &quot;map&quot;}, pose: {position: {x: 0, y: 0}, orientation: {z: 0.0, w: 1.0}}}' " />
+  
+  
+</launch>

@@ -1,0 +1,30 @@
+<launch>
+    <!-- Map server -->
+    <arg name="map_file" default="$(find planner_benchmark)/maps/1.yaml"/>
+    <node name="map_server" pkg="map_server" type="map_server" args="$(arg map_file)" />
+
+    <!-- global_planner -->
+    <node pkg="planner_benchmark" type="planner_benchmark" name="global_planner" output="screen">
+        <param name="base_global_planner" value="global_planner/GlobalPlanner"/>
+        <rosparam file="$(find planner_benchmark)/param/global_planner/global_planner_cost_map.yaml" command="load" />
+        <rosparam file="$(find planner_benchmark)/param/global_planner/global_planner.yaml" command="load" />
+    </node>
+
+    <!-- navfn planner -->
+    <node pkg="planner_benchmark" type="planner_benchmark" name="planner_navfn" output="screen">
+        <param name="base_global_planner" value="navfn/NavfnROS"/>
+        <rosparam file="$(find planner_benchmark)/param/global_planner/global_planner_cost_map.yaml" command="load" />
+        <rosparam file="$(find planner_benchmark)/param/planner_navfn.yaml" command="load" />
+    </node>
+
+    <!-- dlux planner -->
+    <node pkg="planner_benchmark" type="planner_benchmark" name="planner_dlux" output="screen">
+        <param name="base_global_planner" value="nav_core_adapter::GlobalPlannerAdapter"/>
+        <rosparam file="$(find planner_benchmark)/param/global_planner/global_planner_cost_map.yaml" command="load" />
+        <rosparam file="$(find planner_benchmark)/param/planner_dlux_global.yaml" command="load" />
+    </node>
+
+    <node name="rviz" pkg="rviz" type="rviz" args="-d $(find planner_benchmark)/param/rviz/hospital_smoothed_Astar.rviz"/> 
+    <node pkg="planner_benchmark" type="fake_state" name="fake_state_node" output="screen" />
+    <node pkg="tf" type="static_transform_publisher" name="map_odom_broadcaster" args="0 0 0 0 0 0 /map /odom 100" />
+</launch>
